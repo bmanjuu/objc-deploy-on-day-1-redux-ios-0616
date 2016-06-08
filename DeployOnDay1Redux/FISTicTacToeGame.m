@@ -27,8 +27,8 @@
         //represent 3x3 grid by using nested array
         //numbers represent the positions in the tic tac toe grid that the players will use to specify their positions... perhaps use if statement to match values (convert to integerValue)
         /*NSArray *ticTacToeGrid = @[ [@[ @" ", @" ", @" " ] mutableCopy],
-                                    [@[ @" ", @" ", @" " ] mutableCopy],
-                                    [@[ @" ", @" ", @" " ] mutableCopy] ]; */
+                                      [@[ @" ", @" ", @" " ] mutableCopy],
+                                      [@[ @" ", @" ", @" " ] mutableCopy] ]; */
         
         self.board = [[NSMutableArray alloc] init];
         for(NSUInteger i=0; i < 3; i++){
@@ -88,46 +88,25 @@
 {
     NSString *winner = @"";
     
-    //winning row combinations
-    for(NSArray *row in self.board){
-        if([row isEqualToArray:@[@"X", @"X", @"X"]]){
-            winner = @"X";
+    //winning combinations
+        /*  NOTE: I originally set self.board[row][column] isEqualToString self.board[next row][next column] but it was giving me problems where the "winner" screen does not pop up right away and/or the wrong "winner" pops up for columns 0 & 1, but worked fine for column 2. This could be due to the fact that the game is checking column 2 first before checking columns 0 and 1. Need to refactor code at another time. In the code below, it only works when I use the return winner = @"winner here". It does not work without the return statement, so it could also be an issue of when it "leaves" the if statement. Another thing to add is to check if the space is an empty string, because if there are 3 empty string together, it will be considered a "winner" */
+    
+    NSDictionary *winningCombinations = @{ @"row0" : @[self.board[0][0], self.board[0][1], self.board[0][2]],
+                                           @"row1" : @[self.board[1][0], self.board[1][1], self.board[1][2]],
+                                           @"row2" : @[self.board[2][0], self.board[2][1], self.board[2][2]],
+                                           @"col0" : @[self.board[0][0], self.board[1][0], self.board[2][0]],
+                                           @"col1" : @[self.board[0][1], self.board[1][1], self.board[2][1]],
+                                           @"col2" : @[self.board[0][2], self.board[1][2], self.board[2][2]],
+                                           @"diag1" : @[self.board[0][0], self.board[1][1], self.board[2][2]],
+                                           @"diag2" : @[self.board[0][2], self.board[1][1], self.board[2][0]],};
+    
+    for(NSString *winners in winningCombinations){
+        if([[winningCombinations valueForKey:winners] isEqualToArray:@[@"X", @"X", @"X"]]){
+            return winner = @"X";
         }
-        else if ([row isEqualToArray:@[@"O", @"O", @"O"]]){
-            winner = @"O";
+        else if ([[winningCombinations valueForKey:winners] isEqualToArray:@[@"O", @"O", @"O"]]){
+            return winner = @"O";
         }
-    }
-    
-    //winning column combinations
-        //  NOTE: I originally set self.board[row][column] isEqualToString self.board[next row][next column] but it was giving me problems where the "winner" screen does not pop up right away and/or the wrong "winner" pops up for columns 0 & 1, but worked fine for column 2. This could be due to the fact that the game is checking column 2 first before checking columns 0 and 1. Need to refactor code at another time. In the code below, it only works when I use the return winner = @"winner here". It does not work without the return statement, so it could also be an issue of when it "leaves" the if statement
-    
-    if([self.board[0][0] isEqualToString:@"X"] && [self.board[2][0] isEqualToString:@"X"] && [self.board[1][0] isEqualToString:@"X"]){
-        return winner = @"X";
-    }
-    else if([self.board[0][0] isEqualToString:@"O"] && [self.board[2][0] isEqualToString:@"O"] && [self.board[1][0] isEqualToString:@"O"]){
-        return winner = @"O";
-    }
-    else if([self.board[0][1] isEqualToString:@"X"] && [self.board[1][1] isEqualToString:@"X"] && [self.board[2][1] isEqualToString:@"X"]){
-        return winner = @"X";
-    }
-    else if([self.board[0][1] isEqualToString:@"O"] && [self.board[1][1] isEqualToString:@"O"] && [self.board[2][1] isEqualToString:@"O"]){
-        return winner = @"O";
-    }
-    else if([self.board[0][2] isEqualToString:@"X"] && [self.board[1][2] isEqualToString:@"X"] && [self.board[2][2] isEqualToString:@"X"]){
-        return winner = @"X";
-    }
-    else if([self.board[0][2] isEqualToString:@"O"] && [self.board[1][2] isEqualToString:@"O"] && [self.board[2][2] isEqualToString:@"O"]){
-        return winner = @"O";
-    }
-    
-    
-    //winning diagonal combinations
-    if([self.board[0][0] isEqualToString:self.board[1][1]] && [self.board[1][1] isEqualToString:self.board[2][2]]){
-        winner = self.board[0][0];
-    }
-    
-    if([self.board[0][2] isEqualToString:self.board[1][1]] && [self.board[1][1] isEqualToString:self.board[2][0]]){
-        winner = self.board[0][2];
     }
     
     return winner;
@@ -183,4 +162,57 @@
 //                [playerO addObject:@[@(i), @(j)]];
 //            }
 //        }
+//    }
+//winning row combinations
+//    for(NSArray *row in self.board){
+//        if([row isEqualToArray:@[@"X", @"X", @"X"]]){
+//            winner = @"X";
+//        }
+//        else if ([row isEqualToArray:@[@"O", @"O", @"O"]]){
+//            winner = @"O";
+//        }
+//    }
+//    if([self.board[0][0] isEqualToString:@"X"] && [self.board[2][0] isEqualToString:@"X"] && [self.board[1][0] isEqualToString:@"X"]){
+//        return winner = @"X";
+//    }
+//    else if([self.board[0][0] isEqualToString:@"O"] && [self.board[2][0] isEqualToString:@"O"] && [self.board[1][0] isEqualToString:@"O"]){
+//        return winner = @"O";
+//    }
+//    else if([self.board[0][1] isEqualToString:@"X"] && [self.board[1][1] isEqualToString:@"X"] && [self.board[2][1] isEqualToString:@"X"]){
+//        return winner = @"X";
+//    }
+//    else if([self.board[0][1] isEqualToString:@"O"] && [self.board[1][1] isEqualToString:@"O"] && [self.board[2][1] isEqualToString:@"O"]){
+//        return winner = @"O";
+//    }
+//    else if([self.board[0][2] isEqualToString:@"X"] && [self.board[1][2] isEqualToString:@"X"] && [self.board[2][2] isEqualToString:@"X"]){
+//        return winner = @"X";
+//    }
+//    else if([self.board[0][2] isEqualToString:@"O"] && [self.board[1][2] isEqualToString:@"O"] && [self.board[2][2] isEqualToString:@"O"]){
+//        return winner = @"O";
+//    }
+
+
+
+//    ----------------------------------------------------------------------------
+
+//    if([self.board[0][0] isEqualToString:self.board[2][0]] && [self.board[1][0] isEqualToString:self.board[2][0]] && ![self.board[0][0] isEqualToString: @""]){ //these methods will continue having the same problem if there is no check for the empty string!
+//        winner = self.board[0][0];
+//        return winner;
+//    }
+//    else if([self.board[0][1] isEqualToString:self.board[1][1]] && [self.board[2][1] isEqualToString:self.board[1][1]] && ![self.board[0][1] isEqualToString: @""]){
+//        winner = self.board[0][1];
+//        return winner;
+//    }
+//    else if([self.board[0][2] isEqualToString:self.board[1][2]] && [self.board[2][2] isEqualToString:self.board[1][2]] && ![self.board[0][2] isEqualToString: @""]){
+//        winner = self.board[0][2];
+//        return winner;
+//    }
+//
+//    //winning diagonal combinations
+//    if([self.board[0][0] isEqualToString:self.board[1][1]] && [self.board[1][1] isEqualToString:self.board[2][2]]){
+//        winner = self.board[0][0];
+//    }
+//
+//    if([self.board[0][2] isEqualToString:self.board[1][1]] && [self.board[1][1] isEqualToString:self.board[2][0]]){
+//        winner = self.board[0][2];
 //    }
